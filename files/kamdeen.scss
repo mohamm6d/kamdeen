@@ -3,58 +3,93 @@ $kd-bg-opacity: 1;
 $kd-ring-offset-shadow: 0 0 #000;
 $kd-ring-shadow: 0 0 #0000;
 $kd-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-$kd-pm-sizes: 1 1rem, 2 2rem, 3 3rem;
+
 $kd-btn-sizes: 1 1rem, 2 2rem, 3 3rem;
 $kd-border: 1px solid #eee;
-$kd-bg-colors: primary blue, danger red, dark black;
 
-@each $name, $color in $kd-bg-colors {
-  .kd-btn-$name {
-    background-color: $color;
-  }
-}
+/**
+Here we generate margin & paddings
+**/
+$spaceamounts: (2, 5, 8, 10, 15, 20, 25, 30, 35, 40, 45, 50, 75, 100);
+$sides: (all, x, y, top, bottom, left, right);
 
-@each $index, $size in $kd-pm-sizes {
-  .kd-p-r-#{$index} {
-    padding: $size;
-  }
-  .kd-m-r-#{$index} {
-    padding: $size;
-  }
-  .kd-pt-r-#{$index} {
-    padding-top: $size;
-  }
-  .kd-pb-r-#{$index} {
-    padding-bottom: $size;
-  }
-  .kd-pl-r-#{$index} {
-    padding-left: $size;
-  }
-  .kd-pr-r-#{$index} {
-    padding-right: $size;
-  }
-  .kd-mt-r-#{$index} {
-    margin-top: $size;
-  }
-  .kd-mb-r-#{$index} {
-    margin-bottom: $size;
-  }
-  .kd-ml-r-#{$index} {
-    margin-left: $size;
-  }
-  .kd-mr-r-#{$index} {
-    margin-right: $size;
+@mixin make-space($prefix, $property) {
+  $property-prefix: #{str-slice($property, 0, 1)};
+
+  @each $space in $spaceamounts {
+    @each $side in $sides {
+      @if $side == "all" {
+        .#{$prefix}-#{$property-prefix}-#{$space} {
+          #{$property}: #{$space}px !important;
+        }
+      } @else if $side == "x" or $side == "y" {
+        .#{$prefix}-#{$property-prefix}#{$side}-#{$space} {
+          @if $side == "x" {
+            #{$property}-left: #{$space}px !important;
+            #{$property}-right: #{$space}px !important;
+          } @else {
+            #{$property}-top: #{$space}px !important;
+            #{$property}-bottom: #{$space}px !important;
+          }
+        }
+      } @else {
+        .#{$prefix}-#{$property-prefix}#{str-slice($side, 0, 1)}-#{$space} {
+          #{$property}-#{$side}: #{$space}px !important;
+        }
+      }
+    }
   }
 }
 
-.kd-bg-white {
-  background-color: rgba(255, 255, 255, $kd-bg-opacity);
+@include make-space(kd, margin);
+@include make-space(kd, padding);
+
+@media (min-width: 1px) {
+  @include make-space(kd-xs, margin);
+  @include make-space(kd-xs, padding);
 }
-.kd-border {
-  border: $kd-border;
+
+@media (min-width: 768px) {
+  @include make-space(kd-md, margin);
+  @include make-space(kd-md, padding);
 }
-.kd-radius {
-  border-radius: $kd-border-radius;
+
+/**
+Here we generate colors & backgrounds
+**/
+$kd-navy: #37455a;
+$kd-blue: #abbdd3;
+$kd-cyan: #a3d9cb;
+$kd-peach: #ff9d7a;
+$kd-white: #fff;
+
+$colors: (
+  secondary: $kd-navy,
+  primary: $kd-blue,
+  cyan: $kd-cyan,
+  peach: $kd-peach,
+  white: $kd-white
+);
+
+@mixin gen-props($prefix, $property) {
+  @each $color-name, $color in $colors {
+    .kd-#{$prefix}-#{$color-name} {
+      #{$property}: $color;
+    }
+  }
+}
+
+@include gen-props("text", "color");
+@include gen-props("bg", "background");
+@include gen-props("border-color", "border-color");
+
+@for $i from 0 through 20 {
+  .kd-border-raduis-#{$i} {
+    border-radius: #{$i}px;
+  }
+  .kd-border-width-#{$i} {
+    border-width: #{$i}px;
+  }
 }
 
 .kd-shadow,
@@ -62,8 +97,14 @@ $kd-bg-colors: primary blue, danger red, dark black;
   box-shadow: $kd-ring-offset-shadow, $kd-ring-shadow, $kd-shadow;
 }
 
-.kd-no-border {
-  border: none;
+.kd-border-solid {
+  border-style: solid;
+}
+.kd-border-dotted {
+  border-style: dotted;
+}
+.kd-border-dashed {
+  border-style: dashed;
 }
 
 .kd-no-bg {
@@ -71,7 +112,9 @@ $kd-bg-colors: primary blue, danger red, dark black;
 }
 
 .kd-btn {
-  @extend .kd-no-border;
-  @extend .kd-p-1;
-  @extend .kd-btn-primary;
+  @extend .kd-border-width-0;
+  @extend .kd-bg-primary;
+  @extend .kd-text-white;
+  @extend .kd-px-20;
+  @extend .kd-py-15;
 }
