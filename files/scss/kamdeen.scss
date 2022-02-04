@@ -1,3 +1,7 @@
+@import 'scss/components/grid.scss';
+@include gridGenerator();
+@include gridFlex();
+
 $kd-border-radius: 1rem;
 $kd-bg-opacity: 1;
 $kd-ring-offset-shadow: 0 0 #000;
