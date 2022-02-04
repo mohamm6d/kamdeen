@@ -1,0 +1,77 @@
+$kd-border-radius: 1rem;
+$kd-bg-opacity: 1;
+$kd-ring-offset-shadow: 0 0 #000;
+$kd-ring-shadow: 0 0 #0000;
+$kd-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+$kd-pm-sizes: 1 1rem, 2 2rem, 3 3rem;
+$kd-btn-sizes: 1 1rem, 2 2rem, 3 3rem;
+$kd-border: 1px solid #eee;
+$kd-bg-colors: primary blue, danger red, dark black;
+
+@each $name, $color in $kd-bg-colors {
+  .kd-btn-$name {
+    background-color: $color;
+  }
+}
+
+@each $index, $size in $kd-pm-sizes {
+  .kd-p-r-#{$index} {
+    padding: $size;
+  }
+  .kd-m-r-#{$index} {
+    padding: $size;
+  }
+  .kd-pt-r-#{$index} {
+    padding-top: $size;
+  }
+  .kd-pb-r-#{$index} {
+    padding-bottom: $size;
+  }
+  .kd-pl-r-#{$index} {
+    padding-left: $size;
+  }
+  .kd-pr-r-#{$index} {
+    padding-right: $size;
+  }
+  .kd-mt-r-#{$index} {
+    margin-top: $size;
+  }
+  .kd-mb-r-#{$index} {
+    margin-bottom: $size;
+  }
+  .kd-ml-r-#{$index} {
+    margin-left: $size;
+  }
+  .kd-mr-r-#{$index} {
+    margin-right: $size;
+  }
+}
+
+.kd-bg-white {
+  background-color: rgba(255, 255, 255, $kd-bg-opacity);
+}
+.kd-border {
+  border: $kd-border;
+}
+.kd-radius {
+  border-radius: $kd-border-radius;
+}
+
+.kd-shadow,
+.kd-shadow-sm {
+  box-shadow: $kd-ring-offset-shadow, $kd-ring-shadow, $kd-shadow;
+}
+
+.kd-no-border {
+  border: none;
+}
+
+.kd-no-bg {
+  background: none;
+}
+
+.kd-btn {
+  @extend .kd-no-border;
+  @extend .kd-p-1;
+  @extend .kd-btn-primary;
+}
