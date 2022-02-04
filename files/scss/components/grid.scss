@@ -1,0 +1,125 @@
+
+/***
+Grid Generator
+***/
+@mixin gridClasses(
+  $_prefix: "",
+  $gridColumns: 12,
+  $spaceUnits: (
+    8px,
+    16px,
+    32px
+  ),
+  $breakpoint_min: "",
+  $breakpoint_max: ""
+) {
+  // grid classes
+  .#{$_prefix}grid {
+    margin: 0;
+    clear: none;
+    float: left;
+  }
+  @for $i from 1 through $gridColumns {
+    .#{$_prefix}grid-#{$i} {
+      @extend .#{$_prefix}grid;
+      width: percentage($i/$gridColumns);
+    }
+  }
+
+  // offset classes
+  .#{$_prefix}offset-0 {
+    margin-left: 0;
+  }
+  @for $i from 1 through $gridColumns {
+    .#{$_prefix}offset-#{$i} {
+      margin-left: percentage($i/$gridColumns);
+    }
+  }
+
+  // spacing helper classes
+}
+
+// use grid-flex for equal height grid containers
+@mixin gridFlex() {
+  .grid-flex {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -moz-box-wrap: wrap;
+    -webkit-box-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    -ms-flexbox-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+  }
+}
+
+// generate grid classes for each breakpoint, defaults defined below
+@mixin gridGenerator(
+  $gridColumns: 12,
+  // number of grid columns
+  $breakpoints:
+    (
+      0,
+      480px,
+      800px
+    ),
+  // array of breakpoints
+  $breakpointPrefixes:
+    (
+      s-,
+      m-,
+      l-
+    ),
+  // array of breakpoint prefixes
+  $breakpointType: "px",
+  // breakpoint type px or em
+  $spaceUnits:
+    (
+      8px,
+      16px,
+      32px
+    )
+    // array padding and margin units
+) {
+  //* generate top-level grid classes, no prefix */
+  @include gridClasses("", $gridColumns, $spaceUnits);
+
+  @for $i from 1 through length($breakpointPrefixes) {
+    $prefix: nth($breakpointPrefixes, $i);
+    $breakpoint_min: nth($breakpoints, $i);
+
+    // Add one to support pixel breakpoints, EMs don't need the extra bump
+    @if $breakpointType == "px" {
+      $breakpoint_min: nth($breakpoints, $i) + 1;
+    }
+
+    $breakpoint_max: "";
+
+    @if $i < length($breakpointPrefixes) {
+      $breakpoint_max: nth($breakpoints, $i + 1);
+    }
+
+    //   //* smallest breakpoint */
+    @if $breakpoint_min == 1 {
+      @media (max-width: $breakpoint_max) {
+        @include gridClasses($prefix, $gridColumns, $spaceUnits);
+      }
+    } @else {
+      //* middle breakpoints */
+      @if $breakpoint_max != "" {
+        @media (min-width: $breakpoint_min) and (max-width: $breakpoint_max) {
+          @include gridClasses($prefix, $gridColumns, $spaceUnits);
+        }
+
+        //* largest breakpoint */
+      } @else {
+        @media (min-width: $breakpoint_min) {
+          @include gridClasses($prefix, $gridColumns, $spaceUnits);
+        }
+      }
+    }
+  }
+}
+
